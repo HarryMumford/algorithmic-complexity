@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/* App.js */
+import React, { Component } from "react"
+import timings from "./logic/performance"
+import CanvasJSReact from "./assets/canvasjs.react"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+var CanvasJSChart = CanvasJSReact.CanvasJSChart
+
+class App extends Component {
+	constructor() {
+		super()
+		this.data = timings("reverse", 10, 5000)
+	}
+
+	render() {
+		const options = {
+			title: {
+				text: "Array function performance"
+			},
+			data: [
+				{
+					type: "spline",
+
+					dataPoints: this.data
+				}
+			]
+		}
+
+		return (
+			<div>
+				<CanvasJSChart
+					options={options}
+					/* onRef={ref => this.chart = ref} */
+				/>
+				{/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
+			</div>
+		)
+	}
 }
 
-export default App;
+export default App
