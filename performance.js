@@ -1,23 +1,28 @@
-import arrayGenerator from './array-generator'
+const { performance } = require("perf_hooks")
+const arrayFunctions = require("./array-functions")
 
-class Performance {
-	constructor() {
-    this.arrayGenerator = arrayGenerator
-  }
+genArrays = require("./input-array-generator")
 
-    shuffle = {
-        x: [1, 2, 3, 4],
-        y: [10, 15, 13, 17],
-        type: 'scatter'
-      };
-      
-      var trace2 = {
-        x: [1, 2, 3, 4],
-        y: [16, 5, 11, 9],
-        type: 'scatter'
-      };
-      
-      var data = [trace1, trace2];
-      
-      Plotly.newPlot('myDiv', data);
+const l = console.log
+
+function timings(funcName, quantity, increment) {
+	const arrays = genArrays(quantity, increment)
+
+	var timings = {}
+
+	const testFunction = arrayFunctions[`${funcName}`]
+
+	arrays.forEach(arr => {
+		t0 = performance.now()
+		testFunction(arr)
+		t1 = performance.now()
+		const time = Number((t1 - t0).toPrecision(3))
+		timings[`${arr.length}`] = time
+	})
+
+	return timings
 }
+
+l(timings("last", 5, 10000))
+l(timings("sort", 5, 10000))
+l(timings("shuffle", 5, 10000))
